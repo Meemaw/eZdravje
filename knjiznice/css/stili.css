@@ -2,14 +2,36 @@
     background-color: Black;
 }
 
+.back-detail {
+    background-color: #00CCFF;
+}
+
 .nav-container {
     margin-left: 15px;
 }
+
+
 
 .margin-center {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+}
+
+
+
+.text-name {
+    color: #37BC9B;
+}
+
+.right-align {
+    float: right;
+    background-color: #cccccc;
+}
+
+.right-align:hover {
+    background-color: Black;
+    color: White;
 }
 
 .margin-small {
@@ -39,8 +61,15 @@
     padding: 30px;
 }
 
+.margin-bottom {
+    margin-bottom: 30px;
+}
 .border {
     border-color: #ddd;
+}
+
+.medium-margin {
+    margin: 30px;
 }
 
 .text-center {
@@ -57,14 +86,10 @@
 }
 
 .selected-button {
-    background-color: #939393;
+    background-color: #cccccc;
 }
 
 
-
-.photo-header {
-    background-image: url("background.jpg");
-}
 
 .light-text {
    color: #a8a8a8;
@@ -85,6 +110,10 @@
 }
 
 .right-align {
+    float: right;
+}
+
+.right-alignn {
     float: right;
 }
 

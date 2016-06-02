@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <title>eZdravje :: 4. DN :: OIS 2015/2016</title>
-  <link href="knjiznice/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <link href="knjiznice/css/stili.css" rel="stylesheet">
   <style>
     body {padding-top: 70px;}
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
-  <script src="knjiznice/js/bootstrap.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script src="knjiznice/js/koda.js"></script>
 </head>
 <body>
@@ -30,19 +30,6 @@
         <ul class="nav navbar-nav">
           <li><a href="opis.html">Opis ideje</a></li>
           <li><a href="nacrt.html">Načrt informacijske rešitve</a></li>
-         <li class="dropdown">
-            <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Izbira pacienta
-              <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1" id="pacientiDropdown">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a href="#">Separated link</a></li>
-            </ul>
-          </li>
           <li><a href="#" onclick="generirajUporabnike()">Generiraj paciente</a></li>
       
 
@@ -55,11 +42,10 @@
   <!-- ZAČETEK: Vsebina aplikacije -->
 <div class="container-fluid">
   <div class="container container-border">
-    <div class="doctor-header">
       <img src="doctor.jpg" class="img-circle button-center margin-small" alt="Cinque Terre" width="204" height="150"> 
       <p class="text-center strong-text">dr. Janez Debevec</p>
       <p class="text-center light-text">General medicine expert</p>
-      <div class="btn-group-wrap">
+      <div class="btn-group-wrap" id="master-detail">
         <div class="btn-group btn-group-justified" role="group" aria-label="..." id="btn-group-doctor">
           <div class="btn-group" role="group">
             <button type="button" class="btn btn-default" id="btn-0" onclick="sectionButtonClick(0)">Moji pacienti</button>
@@ -70,7 +56,6 @@
           <div class="btn-group" role="group">
             <button type="button" class="btn btn-default" id="btn-2" onclick="sectionButtonClick(2)">Dodajanje pacientov</button>
           </div>
-        </div>
       </div>
     </div>
     
@@ -81,6 +66,23 @@
     
     <div id="vprasanja">
       <div class="section" id="vprasanjaContainer"></div>
+    </div>
+    
+    
+    <div id="patient-detail">
+      <button type="button" class="btn btn-default btn-lg" aria-label="Left Align" onclick="mojiPacienti()">
+         <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>
+      </button>
+      <div class="row container-border">
+        <div class="col-md-3">
+          <img src="profile.png" class="img-responsive margin-center" alt="Cinque Terre" width="120" height="120">
+        </div>
+        <div class="col-md-6">
+          <h4 class="text-name" id="pacient-name"></h4>
+          <p id="pacient-date"></p>
+          <p id="pacient-ehrid"></p>
+        </div>
+      </div>
     </div>
     
     
