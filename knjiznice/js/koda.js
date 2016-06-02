@@ -3,6 +3,8 @@ var baseUrl = 'https://rest.ehrscape.com/rest/v1';
 var queryUrl = baseUrl + '/query';
 
 var username = "ois.seminar";
+var googleApiKey = "AIzaSyDBIdw_mXDciAlb53r_J8raXji0O-H7TVI";
+var baseUrlDrugs = "http://www.drugs.com/search.php?searchterm=";
 var password = "ois4fri";
 var myPatients = [];
 var patientList = [{ime: "Miha", priimek: "Novak", datumRojstva : "1982-7-18T19:30" },
@@ -14,10 +16,8 @@ var vprasanja = [{patient: patientList[0], tekst: "lep pozdrav . zanima me namre
                 {patient: patientList[2], tekst: "Pozdravljeni !\n Mene pa zanima ,kaj pomeni diagnoza ARTHRALGIA OME DEX.\nHvala in lep pozdrav!", id: "3"},
                 {patient: patientList[1], tekst: "Pred enim mesecem se je partnerju na spolovilu pojavila bulica belkaste barve, trda na otip. Ob dotiku ne čuti bolečine in nima drugih težav, ne z uronoranjem ne med erekcijo. Zanima me kaj bi to bilo.", id: "4"},
                 ];
-                    
-                    
-var kreiranjeUspelo = false;
-
+                
+var dates = ["2016-03-17T11:30Z", "2016-03-19T14:40Z", "2016-04-04T21:30Z", "2016-03-22T12:25Z"];
 
 $(document).ready(function(){
     sectionButtonClick(0);
@@ -27,14 +27,12 @@ $(document).ready(function(){
 
 
 function zbrisi(pacient) {
-    console.log(pacient);
     var id = pacient.partyId;
     setSessionId();
     $.ajax({
         url: baseUrl + "/demographics/party/" + id,
         type: 'DELETE',
         success: function(res) {
-            console.log("Deleted pacient: " + res);
             getPacients();
         },
 	    error: function(err) {
@@ -96,16 +94,23 @@ function getRandomInt(min, max) {
 
 
 function dodajVitalneZnakePacientu(ehrId) {
-    for(var i = 0; i < 4; i++) {
-        var today = new Date();
-        var visina = getRandomInt(160, 210);
-        var teza =   visina - (100);
-        var temperatura = getRandomInt(36,41);
-        var sys = getRandomInt(80,200);
-        var dis = getRandomInt(50,140);
-        var nasicenost = getRandomInt(30,99);
-        var merilec = "Jožica Božiza";
-        dodajMeritveVitalnihZnakov(ehrId,today,visina,teza,temperatura,sys,dis,nasicenost,merilec);
+    var date = dates[0];
+    var visina = getRandomInt(160, 210);
+    var teza =   visina - (100);
+    var temperatura = getRandomInt(36,41);
+    var sys = getRandomInt(80,200);
+    var dis = getRandomInt(50,120);
+    var nasicenost = getRandomInt(30,99);
+    var merilec = "Jožica Božiza";
+    for(var i = 1; i < 5; i++) {
+        dodajMeritveVitalnihZnakov(ehrId,date,visina,teza,temperatura,sys,dis,nasicenost,merilec);
+        date = dates[i];
+        visina+=getRandomInt(-1,1);
+        teza+=getRandomInt(-2,2);
+        temperatura = Math.max(36, Math.min(temperatura+getRandomInt(-2,2), 41));
+        sys+=getRandomInt(-30,30);
+        dis+=getRandomInt(-20,20);
+        nasicenost = Math.min(99, nasicenost+getRandomInt(-3,3));
     }
 }
 
@@ -140,7 +145,6 @@ function dodajMeritveVitalnihZnakov(ehrId, datum, visina, teza, temperatura, sys
 	    contentType: 'application/json',
 	    data: JSON.stringify(podatki),
 	    success: function (res) {
-	        console.log("Uspešno dodani vitalni znaki");
 	    },
 	    error: function(err) {
 	        console.log("Error adding vital signs: " + JSON.parse(err.responseText).userMessage + "'!" );
@@ -157,12 +161,71 @@ function pacientClick(pacient) {
     $("#master-detail").hide();
     $("#patient-detail").show();
     drawGeneralInfo(pacient);
+    preberiVitalneZnake(pacient.id, drawTemperatureChart, "body_temperature");
+    preberiVitalneZnake(pacient.id, drawWeight, "weight");
+    preberiVitalneZnake(pacient.id, drawHeight, "height");
+    preberiVitalneZnake(pacient.id, drawBloodPressure, "blood_pressure");
+    preberiVitalneZnake(pacient.id, drawO2, "spO2");
+}
+
+function drawSymptoms(result) {
+    console.log(result);
 }
 
 function drawGeneralInfo(pacient) {
     $("#pacient-name").text(pacient.ime + "  " + pacient.priimek);
     $("#pacient-date").text("Datum rojstva:  " + pacient.datumRojstva);
     $("#pacient-ehrid").text("ehrId pacienta:  " + pacient.id);
+}
+
+function drawO2(results) {
+    console.log(results);
+}
+
+function drawBloodPressure(results) {
+    var result = results[0];
+    var sys = result.systolic;
+    var dis = result.diastolic;
+    
+    
+    
+    $("#patient-sys").css("width", Math.floor(sys/200.0 * 100) + "%");
+    $("#patient-dis").css("width", Math.floor(dis/120.0 * 100) + "%");
+    
+    var current = sys + "/" + dis + "mm[Hg]";
+    $("#patient-pressure").text(current);
+}
+
+function drawHeight(results) {
+    var current = results[0].height;
+    $("#patient-height").text(current + " cm");
+}
+
+function drawTemperatureChart(results) {
+    console.log(results);
+}
+
+function drawWeight(results) {
+    var current = results[0].weight;
+    $("#patient-weight").text(current + " kg");
+}
+
+function preberiVitalneZnake(ehrId, callback, tip) {
+    setSessionId();
+    $.ajax({
+        url: baseUrl + "/view/" + ehrId + "/" + tip,
+	    type: 'GET',
+	    success: function (res) {
+	    	if (res.length > 0) {
+		        callback(res);
+	    	} else {
+	    	    console.log("No results!");
+	    	}
+	    },
+	    error: function() {
+	        console.log("Error!");
+	    }
+    });
 }
 
 
@@ -376,6 +439,57 @@ function kreirajEHRbutton() {
 	    
 	    kreirajEHRuporabnika(patient);
 	}
+}
+
+function najdiZdravila(prevod) {
+    $.ajax({
+        url: queryUrl,
+        type: 'GET',
+        contentType: 'application/json',
+        success: function(response) {
+            
+            console.log(response);
+        },
+        error: function(err) {
+            console.log(err);
+        }
+        
+    });
+}
+
+function prevodEn(response) {
+    var prevod = response.data.translations[0].translatedText;
+    if(prevod) {
+        najdiZdravila(prevod);
+        $("#en-text").text("Angleški prevod: " + prevod);
+    }
+    else drawAlertDiv("error", "No drugs found!");
+}
+
+function prevodLat(response) {
+    var prevod = response.data.translations[0].translatedText;
+    if(prevod) $("#lat-text").text("Latinski prevod: " + prevod);
+    else drawAlertDiv("error", "No drugs found!");
+}
+
+function translateText() {
+    var query = $("#inputDiagnoza").val();
+    if(!query || query.trim().length == 0) {
+        drawAlertDiv("warning", "Please enter a diagnosis");
+    } else {
+        console.log(query);
+        var enScript = document.createElement('script');
+        var latScript = document.createElement('script');
+        enScript.type = 'text/javascript';
+        latScript.type = 'text/javascript';
+        var source = 'https://www.googleapis.com/language/translate/v2?key=' + googleApiKey + '&source=sl&target=en&callback=prevodEn&q=' + query;
+        var latSource = 'https://www.googleapis.com/language/translate/v2?key=' + googleApiKey + '&source=sl&target=lat&callback=prevodLat&q=' + query;
+        enScript.src = source;
+        latScript.src = latSource;
+        document.getElementsByTagName('head')[0].appendChild(enScript);
+        document.getElementsByTagName('head')[0].appendChild(latScript);
+    }
+    
 }
 
 

@@ -11,6 +11,7 @@
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script src="knjiznice/js/koda.js"></script>
+  <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -69,20 +70,56 @@
     </div>
     
     
-    <div id="patient-detail">
+    <div id="patient-detail" class="padding-small patient-holder-border">
+      
       <button type="button" class="btn btn-default btn-lg" aria-label="Left Align" onclick="mojiPacienti()">
          <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>
       </button>
-      <div class="row container-border">
-        <div class="col-md-3">
-          <img src="profile.png" class="img-responsive margin-center" alt="Cinque Terre" width="120" height="120">
+      <div class="row padding-small">
+        <div class="col-md-2">
+          <img src="profile.png" class="img-responsive" alt="Cinque Terre" width="150" height="150">
         </div>
         <div class="col-md-6">
           <h4 class="text-name" id="pacient-name"></h4>
           <p id="pacient-date"></p>
           <p id="pacient-ehrid"></p>
         </div>
+        
+        <div class="col-md-4 verticalLine">
+          <h4 class="text-name">Vnesite diagnozo / simptom</h4>
+          <form class="form-inline">
+            <div class="form-group">
+              <label class="sr-only" for="exampleInputAmount">Diagnoza</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="inputDiagnoza" placeholder="prehlad, migrena,...">
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="translateText()">Poisci zdravila</button>
+          </form>
+          <hr>
+          <p id="en-text"></p>
+          <p id="lat-text"></p>
+        </div>
+          
       </div>
+      
+      <div class="row padding-small">
+        <div class="col-md-8">
+          <hr>
+          <div class="row" style="min-height: 67px;">
+            <div class="col-md-4"><p class="text-center">Age</p><h4 class="text-center text-name" id="patient-age">30</h4></div>
+            <div class="col-md-4 verticalLine"><p class="text-center">Weight</p><h4 class="text-center text-name" id="patient-weight">No value</h4></div>
+            <div class="col-md-4 verticalLine"><p class="text-center">Height</p><h4 class="text-center text-name" id="patient-height">No value</h4></div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-4"><p>Blood pressure</p><h4 class="text-name" id="patient-pressure"></h4></div>
+            <div class="col-md-4"><div class="progress"><div class="progress-bar" id="patient-sys"></div></div><p class="text-center">Systolic</p></div>
+            <div class="col-md-4"><div class="progress"><div class="progress-bar" id="patient-dis"></div></div><p class="text-center">Diastolic</p></div>
+          </div>
+        </div>
+      </div>
+      
     </div>
     
     
