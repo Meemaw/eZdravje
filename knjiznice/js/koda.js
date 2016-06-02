@@ -179,7 +179,23 @@ function drawGeneralInfo(pacient) {
 }
 
 function drawO2(results) {
-    console.log(results);
+    var kisik = results[0].spO2;
+    var div = $("#nasicenost");
+    div.empty();
+    div.append('<h4 class="text-name margin-center">Nasičenost s kisikom</h4>' + 
+          '<svg id="fillgauge1" width="90%" height="150dp" class="margin-small"></svg>');
+    
+    
+    
+    var gauge1 = loadLiquidFillGauge("fillgauge1", kisik);
+    var config1 = liquidFillGaugeDefaultSettings();
+    config1.circleColor = "#FF7777";
+    config1.textColor = "#FF4444";
+    config1.waveTextColor = "#FFAAAA";
+    config1.waveColor = "#FFDDDD";
+    config1.circleThickness = 0.2;
+    config1.textVertPosition = 0.2;
+    config1.waveAnimateTime = 1000;
 }
 
 function drawBloodPressure(results) {
