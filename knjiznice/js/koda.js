@@ -12,6 +12,7 @@ var patientList = [{ime: "Miha", priimek: "Novak", datumRojstva : "1982-7-18T19:
                     {ime: "Marko", priimek: "Godunc", datumRojstva : "1946-1-22T13:42" }];
                     
 var trenutenPacient;
+var alertIndex = 0;
                     
 var vprasanja = [{patient: patientList[0], tekst: "lep pozdrav . zanima me namreč imava s punco oba isto krvno skupino in sicer 0 negativno.. odločili smo se da bi imeli otroka..ali bo vse normalno z otrokom?\nlp hvala za odgovor", id: "1"},
                 {patient: patientList[1], tekst: "Imam subserozni miom, ki mi povzroča zelo močne krvavitve. Močno krvavim že 14 dni, zato mi je ginekolog predpisal primolut forte. Zanima me če bo po jemanju teh tablet, krvavitev ponehala in bodo naslednji ciklusi normalni?", id: "2"},
@@ -36,6 +37,7 @@ function zbrisi(pacient) {
         type: 'DELETE',
         success: function(res) {
             getPacients();
+            drawAlertDiv("success", "Pacient uspešno zbrisan");
         },
 	    error: function(err) {
 	        console.log(err);
@@ -227,7 +229,6 @@ function pacientClick(pacient) {
 }
 
 function drawSymptoms(result) {
-    console.log(result);
 }
 
 function getAge(datum) {
@@ -285,7 +286,6 @@ function drawHeight(results) {
 }
 
 function drawTemperatureChart(results) {
-    console.log(results);
 }
 
 function drawWeight(results) {
@@ -336,10 +336,12 @@ function setSessionId() {
 
 
 function getAlertDiv(type, text) {
-    return '<div class="alert alert-' + type + ' alert-dismissible alert-messages" role="alert">' + 
+    alertIndex = alertIndex + 1;
+    return '<div class="alert alert-' + type + ' alert-dismissible alert-messages" role="alert" id="alert' + alertIndex +'">' + 
             '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + 
             text +
             '</div';
+            
 }
 
 function drawAlertDiv(type, text) {
@@ -347,6 +349,7 @@ function drawAlertDiv(type, text) {
     var container = $("div.container-fluid");
     container.prepend(alertDiv);
     setTimeout(function(){
+        console.log(alertIndex);
         $("div.alert-dismissible").remove();
     }, 2000);
 }
@@ -383,20 +386,18 @@ function drawPatients(patients) {
     function dodajClicke(el, patient) {
         el.find("button").click(function(event) {
                         event.preventDefault();
+
                         zbrisi(patient);
-                        console.log("cupa");
                         return false;
         });
         
         el.click(function(event) {
             event.preventDefault();
             pacientClick(patient);
-            console.log("opa");
             return false;
         });
     }
     
-    console.log(patients.length);
     var patientMenu = $("#patientContainer");
     patientMenu.empty();
     
@@ -564,7 +565,6 @@ function translateText() {
     if(!query || query.trim().length == 0) {
         drawAlertDiv("warning", "Please enter a diagnosis");
     } else {
-        console.log(query);
         var enScript = document.createElement('script');
         var latScript = document.createElement('script');
         enScript.type = 'text/javascript';
