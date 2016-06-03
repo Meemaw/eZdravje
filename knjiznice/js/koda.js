@@ -11,6 +11,8 @@ var patientList = [{ime: "Miha", priimek: "Novak", datumRojstva : "1982-7-18T19:
                     {ime: "Anita", priimek: "Šter", datumRojstva : "1999-9-12T11:30" },
                     {ime: "Marko", priimek: "Godunc", datumRojstva : "1946-1-22T13:42" }];
                     
+var trenutenPacient;
+                    
 var vprasanja = [{patient: patientList[0], tekst: "lep pozdrav . zanima me namreč imava s punco oba isto krvno skupino in sicer 0 negativno.. odločili smo se da bi imeli otroka..ali bo vse normalno z otrokom?\nlp hvala za odgovor", id: "1"},
                 {patient: patientList[1], tekst: "Imam subserozni miom, ki mi povzroča zelo močne krvavitve. Močno krvavim že 14 dni, zato mi je ginekolog predpisal primolut forte. Zanima me če bo po jemanju teh tablet, krvavitev ponehala in bodo naslednji ciklusi normalni?", id: "2"},
                 {patient: patientList[2], tekst: "Pozdravljeni !\n Mene pa zanima ,kaj pomeni diagnoza ARTHRALGIA OME DEX.\nHvala in lep pozdrav!", id: "3"},
@@ -41,6 +43,18 @@ function zbrisi(pacient) {
         
     });
 }
+
+/*
+function initMap() {
+    
+    var mapDiv = document.getElementById('map');
+    var map = new google.maps.Map(mapDiv, {
+      center: {lat: 44.540, lng: -78.546},
+      zoom: 8
+    });
+    
+}
+*/
 
 
 function getPacients() {
@@ -114,6 +128,30 @@ function dodajVitalneZnakePacientu(ehrId) {
     }
 }
 
+function clearInput() {
+    var datumInUra = $("#dodajVitalnoDatumInUra").text('');
+	var telesnaVisina = $("#dodajVitalnoTelesnaVisina").text('');
+	var telesnaTeza = $("#dodajVitalnoTelesnaTeza").text('');
+	var telesnaTemperatura = $("#dodajVitalnoTelesnaTemperatura").text('');
+	var sistolicniKrvniTlak = $("#dodajVitalnoKrvniTlakSistolicni").text('');
+	var diastolicniKrvniTlak = $("#dodajVitalnoKrvniTlakDiastolicni").text('');
+	var nasicenostKrviSKisikom = $("#dodajVitalnoNasicenostKrviSKisikom").text('');
+	var merilec = $("#dodajVitalnoMerilec").text('');
+}
+
+function dodajMeritvePacientu() {
+    var datumInUra = $("#dodajVitalnoDatumInUra").val();
+	var telesnaVisina = $("#dodajVitalnoTelesnaVisina").val();
+	var telesnaTeza = $("#dodajVitalnoTelesnaTeza").val();
+	var telesnaTemperatura = $("#dodajVitalnoTelesnaTemperatura").val();
+	var sistolicniKrvniTlak = $("#dodajVitalnoKrvniTlakSistolicni").val();
+	var diastolicniKrvniTlak = $("#dodajVitalnoKrvniTlakDiastolicni").val();
+	var nasicenostKrviSKisikom = $("#dodajVitalnoNasicenostKrviSKisikom").val();
+	var merilec = $("#dodajVitalnoMerilec").val();
+	var ehrId = trenutenPacient.id;
+	dodajMeritveVitalnihZnakov(ehrId,datumInUra,telesnaVisina,telesnaTeza,telesnaTemperatura,sistolicniKrvniTlak,diastolicniKrvniTlak,nasicenostKrviSKisikom, merilec);
+}
+
 function dodajMeritveVitalnihZnakov(ehrId, datum, visina, teza, temperatura, sys, dis, nasicenost, merilec) {
     if(!ehrId  || ehrId.trim().length == 0) return;
     setSessionId();
@@ -145,8 +183,27 @@ function dodajMeritveVitalnihZnakov(ehrId, datum, visina, teza, temperatura, sys
 	    contentType: 'application/json',
 	    data: JSON.stringify(podatki),
 	    success: function (res) {
+	        if(merilec != "Jožica Božiza") {
+	            $("#dodajMeritveVitalnihZnakovSporocilo").html(
+              "<span class='obvestilo label label-success fade-in'>" +
+              "Uspešno dodana meritev vitalnih znakov" + ".</span>");
+              setTimeout(function(){
+                  $("#dodajMeritveVitalnihZnakovSporocilo").empty();
+              }, 2000);
+              pacientClick(trenutenPacient);
+              clearInput();
+	        }
 	    },
 	    error: function(err) {
+	        drawAlertDiv()
+	        if(merilec != "Jožica Božiza") {
+	            $("#dodajMeritveVitalnihZnakovSporocilo").html(
+            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+            JSON.parse(err.responseText).userMessage + "'!");
+              setTimeout(function(){
+                  $("#dodajMeritveVitalnihZnakovSporocilo").empty();
+              }, 2000);
+	        }
 	        console.log("Error adding vital signs: " + JSON.parse(err.responseText).userMessage + "'!" );
 	    }
 	});
@@ -155,6 +212,7 @@ function dodajMeritveVitalnihZnakov(ehrId, datum, visina, teza, temperatura, sys
 
 
 function pacientClick(pacient) {
+    trenutenPacient = pacient;
     $("#patientContainerWrap").hide();
     $("#patient-add").hide();
     $("#vprasanja").hide();
@@ -172,10 +230,19 @@ function drawSymptoms(result) {
     console.log(result);
 }
 
+function getAge(datum) {
+    var oneDay = 24*60*60*1000;
+    var d = new Date(datum);
+    var today = new Date();
+    return Math.round(Math.abs((d.getTime() - today.getTime())/(oneDay)) / 365);
+}
+
 function drawGeneralInfo(pacient) {
+    var datum = parseDate(pacient.datumRojstva);
     $("#pacient-name").text(pacient.ime + "  " + pacient.priimek);
-    $("#pacient-date").text("Datum rojstva:  " + pacient.datumRojstva);
+    $("#pacient-date").text("Datum rojstva:  " + datum);
     $("#pacient-ehrid").text("ehrId pacienta:  " + pacient.id);
+    $("#patient-age").text(getAge(datum));
 }
 
 function drawO2(results) {
@@ -183,7 +250,7 @@ function drawO2(results) {
     var div = $("#nasicenost");
     div.empty();
     div.append('<h4 class="text-name margin-center">Nasičenost s kisikom</h4>' + 
-          '<svg id="fillgauge1" width="90%" height="150dp" class="margin-small"></svg>');
+          '<svg id="fillgauge1" width="90%" height="150px" class="margin-small"></svg>');
     
     
     
@@ -208,7 +275,7 @@ function drawBloodPressure(results) {
     $("#patient-sys").css("width", Math.floor(sys/200.0 * 100) + "%");
     $("#patient-dis").css("width", Math.floor(dis/120.0 * 100) + "%");
     
-    var current = sys + "/" + dis + "mm[Hg]";
+    var current = sys + " / " + dis + " mm[Hg]";
     $("#patient-pressure").text(current);
 }
 
@@ -305,6 +372,10 @@ function drawVprasanje(vprasanje) {
 }
 
 
+function parseDate(datum) {
+    return datum.split('T')[0];
+}
+
 
 
 function drawPatients(patients) {
@@ -343,7 +414,7 @@ function drawPatients(patients) {
             var image =  '<img src="profile.png" class="img-responsive margin-center" alt="Cinque Terre" width="100" height="100">'
             var divStart = '<div class="col-sm-3 btn btn-default';
             var trash = '<button type="button" class="btn btn-default right-align" aria-label="Left Align"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>'
-            var podatki = '<p class="strong-text">' + patient.ime + " " + patient.priimek + '<p> Datum rojstva: ' + patient.datumRojstva + '<p class="light-text">' + patient.id + '</p></p></p></div>'
+            var podatki = '<p class="strong-text">' + patient.ime + " " + patient.priimek + '<p> Datum rojstva: ' + parseDate(patient.datumRojstva) + '<p class="light-text">' + patient.id + '</p></p></p></div>'
 
                 
             var htmlLeft = divStart + '">' + trash + image + podatki;

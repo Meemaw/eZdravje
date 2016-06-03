@@ -12,6 +12,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script src="knjiznice/js/koda.js"></script>
   <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="knjiznice/js/liquidFillGauge.js" language="JavaScript"></script>
 </head>
 <body>
 
@@ -118,7 +119,33 @@
             <div class="col-md-4"><div class="progress"><div class="progress-bar" id="patient-dis"></div></div><p class="text-center">Diastolic</p></div>
           </div>
         </div>
+        
+        <div class="col-md-4 verticalLine" id="nasicenost">
+
+        </div>
+        
       </div>
+      <hr>
+			<div class="panel-body">
+			  <div class="row">
+			    <div class="col-md-6"><span class="label label-default">Merilec</span><input id="dodajVitalnoMerilec" type="text" class="form-control input-mini" placeholder="medicinska sestra Hrastova Micka"></div>
+			    <div class="col-md-6"><span class="label label-default">Datum in ura</span><input id="dodajVitalnoDatumInUra" type="text" class="form-control input-mini" placeholder="2014-11-21T11:40Z"></div>
+			  </div>
+			  <div class="row">
+			    <div class="col-md-6"><span class="label label-default">Telesna višina</span><div class="input-group"><input id="dodajVitalnoTelesnaVisina" type="text" class="form-control input-mini" placeholder="185"><span class="input-group-addon">cm</span></div></div>
+			    <div class="col-md-6"><span class="label label-default">Telesna teža</span><div class="input-group"><input id="dodajVitalnoTelesnaTeza" type="text" class="form-control input-mini" placeholder="80.00"><span class="input-group-addon">kg</span></div></div>
+			  </div>
+			  <div class="row">
+			    <div class="col-md-6"><span class="label label-default">Telesna temperatura</span><div class="input-group"><input id="dodajVitalnoTelesnaTemperatura" type="text" class="form-control input-mini" placeholder="36.50"><span class="input-group-addon">°C</span></div></div>
+			    <div class="col-md-6"><span class="label label-default">Sistolični krvni tlak</span><div class="input-group"><input id="dodajVitalnoKrvniTlakSistolicni" type="text" class="form-control input-mini" placeholder="118"><span class="input-group-addon">mm Hg</span></div></div>
+			  </div>
+			  <div class="row">
+			    <div class="col-md-6"><span class="label label-default">Diastolični krvni tlak</span><div class="input-group"><input id="dodajVitalnoKrvniTlakDiastolicni" type="text" class="form-control input-mini" placeholder="92"><span class="input-group-addon">mm Hg</span></div></div>
+			    <div class="col-md-6"><span class="label label-default">Nasičenost krvi s kisikom</span><div class="input-group"><input id="dodajVitalnoNasicenostKrviSKisikom" type="text" class="form-control input-mini" placeholder="98"><span class="input-group-addon">%</span></div></div>
+			  </div>
+				<button type="button" class="btn btn-primary btn-xs" onclick="dodajMeritvePacientu()">Dodaj meritve vitalnih znakov</button><span id="dodajMeritveVitalnihZnakovSporocilo"></span>
+	  	</div>
+        
       
     </div>
     
