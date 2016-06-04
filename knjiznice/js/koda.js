@@ -4,7 +4,7 @@ var queryUrl = baseUrl + '/query';
 
 var username = "ois.seminar";
 var googleApiKey = "AIzaSyDBIdw_mXDciAlb53r_J8raXji0O-H7TVI";
-var baseUrlDrugs = "http://www.drugs.com/search.php?searchterm=";
+var baseUrlDrugs = "https://www.drugs.com/search.php?searchterm=";
 var password = "ois4fri";
 var myPatients = [];
 var patientList = [{ime: "Miha", priimek: "Novak", datumRojstva : "1982-7-18T19:30" },
@@ -513,37 +513,6 @@ function sectionButtonClick(st) {
 }
 
 
-
-function najdiPacientaByEHRid() {
-    setSessionId();
-    var ehrId = $("#preberiEHRid").val();
-    
-    if (!ehrId || ehrId.trim().length == 0) {
-        $("#preberiSporocilo").html("<span class='obvestilo label label-warning " +
-      "fade-in'>Prosim vnesite zahtevan podatek!");
-    } else {
-		$.ajax({
-			url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
-			type: 'GET',
-	    	success: function (data) {
-	    	    $("#preberiSporocilo").empty();
-	    	    var party = data.party;
-	    	    drawAlertDiv("success", "Dodan pacient: " + party.firstNames + " " + party.lastNames + ", rojen " + party.dateOfBirth);
-				var patient = {ime: party.firstNames, priimek: party.lastNames + ", rojen " + party.dateOfBirth, id: ehrId};
-				myPatients.push(patient);
-				drawPatients(myPatients);
-				
-			},
-			error: function(err) {
-			    $("#preberiSporocilo").html("<span class='obvestilo label " +
-          "label-danger fade-in'>Napaka '" +
-          JSON.parse(err.responseText).userMessage + "'!");
-			}
-		});
-	}
-}
-
-
 function dodajanjePacientov() {
     $("#patientContainerWrap").hide();
     $("#vprasanja").hide();
@@ -590,11 +559,10 @@ function kreirajEHRbutton() {
 
 function najdiZdravila(prevod) {
     $.ajax({
-        url: queryUrl,
+        url: baseUrlDrugs + prevod,
         type: 'GET',
         contentType: 'application/json',
         success: function(response) {
-            
             console.log(response);
         },
         error: function(err) {
