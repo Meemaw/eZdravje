@@ -42,11 +42,14 @@
       <div class="col-lg-12 text-center">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title">Opis ideje, ki jo aplikacija podpira</h3>
+            <h3 class="panel-title">Opis ideje, ki jo aplikacija uporablja</h3>
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Opis ideje, ki jo aplikacija podpira -->
-            <p><strong>TO-DO</strong>: Na tem mestu je potrebno dodati <strong>osnovni opis ideje rešitve</strong> (kakšen je osnovni SCENARIJ UPORABE, KDO je ciljna publika, za kakšen NAMEN se aplikacija uporablja).</p><p class="text-muted">Opis naj ne bo daljši od 200 besed.</p>
+            <p>eZdravnik je spletna aplikacija je namenjena vsem privatnim zdravnikom, za lažji nadzor in pregled nad svojimi pacienti. Uporabnik in ciljna publika je torej zdravnik.
+            Zdravniku na prijazen način pokaže in omogoča pregled vseh pacientov, dodajanje novih pacientov, brisanje pacientov, odgovarjanje na vprašanja pacientov,
+            spremljanje in vnašanje vitalnih znakov pacienta. Vsebina in funkcionalnosti so jasno ločene, tako da je aplikacija namenjena tudi starejšim zdravnikom. Z enim klikom
+            lahko zdravnik pacienta zbriše, pogleda njegov karton ali pa odgovori na njegovo vprašanje. Namen aplikacije je zdravnikom olajšati delo in jim ponuditi preprosto rešitev pred papirologijo.</p>
             <!-- KONEC: Opis ideje, ki jo aplikacija podpira -->
           </div>
         </div>
@@ -56,7 +59,8 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Uporabljeni zunanji viri podatkov -->
-            <p><strong>TO-DO</strong>: Na tem mestu je navesti zunanji vir podatkov (URL naslov), na kakšen način ste ga uporabili (neposredni API klic, uvožena statična datoteka ipd.) in kaj je bil namen uporabe (kako se vključuje v osnovno idejo aplikacije).</p>
+            <p>Aplikacija uporablja <a href="https://cloud.google.com/translate/">Google translate API</a>. Ta je zdravniku v pomoč pri prevajanju bolezni/simptomov/zdravil v angleški in latinski jezik. Je nekakšen švinglc za zdravnika,
+            ki je pri latinščini rad manjkal.</p>
             <!-- KONEC: Uporabljeni zunanji viri podatkov -->
           </div>
         </div>
@@ -66,7 +70,8 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Master/detail načrtovalski vzorec -->
-            <p><strong>TO-DO</strong>: Na tem mestu morate navesti uporabljen master/detail načrtovalski vzorec in na kakšen način ga nameravate uporabiti.</p>
+            <p>Master/detail vzorec je uporabljen ob prihodu na spletno stran. Zdravniku omogoča hiter in pregleden context switch med pregledom nad pacienti, vprašanji in dodajanjem novih pacientov.
+            </p>
             <!-- KONEC: Master/detail načrtovalski vzorec -->
           </div>
         </div>
@@ -76,7 +81,8 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Uporabljeni zunanji viri podatkov -->
-            <p><strong>TO-DO</strong>: Na tem mestu je potrebno navesti uporabljeno tehniko vizualizacije podatkov (za pomoč lahko uporabite primer iz <a href="https://github.com/mbostock/d3/wiki/Gallery" target="_blank">D3.js galerije</a>) in zakaj je bila ta tehnika izbrana.</p>
+            <p>D3-LiquidFillGauge za vizualizacijo nasičenosti kisika: <a href="http://bl.ocks.org/brattonc/5e5ce9beee483220e2f6">LiquidFillGauge</a>
+            </p><p>D3-BarChart za vizualizacijo telesne temperature pacienta <a href="http://bl.ocks.org/mbostock/3885304">BarChart</a></p>
             <!-- KONEC: Uporabljeni zunanji viri podatkov -->
           </div>
         </div>
