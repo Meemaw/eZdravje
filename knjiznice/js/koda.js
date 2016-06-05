@@ -103,8 +103,13 @@ function odgovoriClick(id) {
         drawAlertDiv("warning", "Prosim vnesite odgovor!");
     } else {
         drawAlertDiv("success", "Odgovor poslan");
-        var index = vprasanja.indexOf(id);
-        vprasanja.splice(index, 1);
+        for(var i = 0; i < vprasanja.length; i++) {
+            if(vprasanja[i].id == id) {
+                vprasanja.splice(i, 1);
+                break;
+            }
+        }
+        
         drawVprasanja();
     }
 
