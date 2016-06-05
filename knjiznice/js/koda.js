@@ -22,6 +22,7 @@ var vprasanja = [{patient: patientList[0], tekst: "lep pozdrav . zanima me namre
 var dates = ["2016-03-17T11:30Z", "2016-03-19T14:40Z", "2016-04-04T21:30Z", "2016-03-22T12:25Z"];
 
 $(document).ready(function(){
+    google.charts.load('current', {'packages':['corechart']});
     sectionButtonClick(0);
     getPacients();
     drawVprasanja();
@@ -46,6 +47,22 @@ function zbrisi(pacient) {
 }
 
 
+
+
+function izrisiGraf(data, id, ime) {
+
+    var data = google.visualization.arrayToDataTable(data);
+
+    var options = {
+      title: ime,
+      curveType: 'function',
+      legend: { position: 'top' }
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById(id));
+
+    chart.draw(data, options);
+  }
 
 
 function getPacients() {
@@ -259,6 +276,20 @@ function drawBloodPressure(results) {
     var sys = result.systolic;
     var dis = result.diastolic;
     
+    console.log(results);
+    
+    var data = [];
+    for(var i = 0; i < results.length; i++) {
+        var l = [];
+        l.push(parseDate(results[i].time));
+        l.push(results[i].systolic);
+        l.push(results[i].diastolic);
+        data.push(l);
+    }
+    data.push(["Datum", "Siastolični tlak", "Diastolični tlak"]);
+    data = data.reverse();
+    
+    izrisiGraf(data, 'curve_chart', 'Graf krvnega tlaka');
     
     
     $("#patient-sys").css("width", Math.floor(sys/200.0 * 100) + "%");
@@ -274,12 +305,34 @@ function drawHeight(results) {
 }
 
 function drawTemperatureChart(results) {
-    izrisiGraf(results);
+    var data = [];
+    
+    for(var i = 0; i < results.length; i++) {
+        var l = [];
+        l.push(parseDate(results[i].time));
+        l.push(results[i].temperature);
+        data.push(l);
+    }
+    data.push(["Datum", "Body Temperature"]);
+    data = data.reverse();
+    
+    izrisiGraf(data, 'curve_chart2', 'Graf telesne temperature');
 }
 
 function drawWeight(results) {
     var current = results[0].weight;
     $("#patient-weight").text(current + " kg");
+    var data = [];
+    for(var i = 0; i < results.length; i++) {
+        var l = [];
+        l.push(parseDate(results[i].time));
+        l.push(results[i].weight);
+        data.push(l);
+    }
+    data.push(["Datum", "Teža"]);
+    data = data.reverse();
+    console.log(data);
+    izrisiGraf(data, 'curve_chart1', 'Graf teže pacienta');
 }
 
 function preberiVitalneZnake(ehrId, callback, tip) {
@@ -323,62 +376,6 @@ function setSessionId() {
 	});
 }
 
-
-function izrisiGraf(data) {
-
-    $("#temperatureChart").empty();
-    $("#temperatureChart").append('<h4 class="text-name">Graf telesne temperature</h4>');
-
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 600 - margin.left - margin.right,
-    height = 300 - margin.top - margin.bottom;
-
-    var x = d3.scale.ordinal()
-        .rangeRoundBands([0, width], .1);
-    
-    var y = d3.scale.linear()
-        .range([height, 0]);
-    
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
-    
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left");
-    
-    var svg = d3.select("#temperatureChart").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    
-      x.domain(data.map(function(d) { return parseDate(d.time); }));
-      y.domain([0, d3.max(data, function(d) { return d.temperature; })]);
-    
-      svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + height + ")")
-          .call(xAxis);
-    
-      svg.append("g")
-          .attr("class", "y axis")
-          .call(yAxis)
-        .append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end");
-    
-      svg.selectAll(".bar")
-          .data(data)
-        .enter().append("rect")
-          .attr("class", "bar")
-          .attr("x", function(d) { return x(parseDate(d.time)); })
-          .attr("width", x.rangeBand())
-          .attr("y", function(d) { return y(d.temperature); })
-          .attr("height", function(d) { return height - y(d.temperature); });
-}
 
 
 function getAlertDiv(type, text) {
