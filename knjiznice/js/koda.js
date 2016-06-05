@@ -4,7 +4,6 @@ var queryUrl = baseUrl + '/query';
 
 var username = "ois.seminar";
 var googleApiKey = "AIzaSyDBIdw_mXDciAlb53r_J8raXji0O-H7TVI";
-var baseUrlDrugs = "https://www.drugs.com/search.php?searchterm=";
 var password = "ois4fri";
 var myPatients = [];
 var patientList = [{ime: "Miha", priimek: "Novak", datumRojstva : "1982-7-18T19:30" },
@@ -46,17 +45,7 @@ function zbrisi(pacient) {
     });
 }
 
-/*
-function initMap() {
-    
-    var mapDiv = document.getElementById('map');
-    var map = new google.maps.Map(mapDiv, {
-      center: {lat: 44.540, lng: -78.546},
-      zoom: 8
-    });
-    
-}
-*/
+
 
 
 function getPacients() {
@@ -229,8 +218,6 @@ function pacientClick(pacient) {
     
 }
 
-function drawSymptoms(result) {
-}
 
 function getAge(datum) {
     var oneDay = 24*60*60*1000;
@@ -395,8 +382,7 @@ function izrisiGraf(data) {
 
 
 function getAlertDiv(type, text) {
-    alertIndex = alertIndex + 1;
-    return '<div class="alert alert-' + type + ' alert-dismissible alert-messages" role="alert" id="alert' + alertIndex +'">' + 
+    return '<div class="alert alert-' + type + ' alert-dismissible alert-messages" role="alert">' + 
             '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + 
             text +
             '</div';
@@ -557,25 +543,9 @@ function kreirajEHRbutton() {
 	}
 }
 
-function najdiZdravila(prevod) {
-    $.ajax({
-        url: baseUrlDrugs + prevod,
-        type: 'GET',
-        contentType: 'application/json',
-        success: function(response) {
-            console.log(response);
-        },
-        error: function(err) {
-            console.log(err);
-        }
-        
-    });
-}
-
 function prevodEn(response) {
     var prevod = response.data.translations[0].translatedText;
     if(prevod) {
-        najdiZdravila(prevod);
         $("#en-text").text("Angleški prevod: " + prevod);
     }
     else drawAlertDiv("error", "No drugs found!");
@@ -663,7 +633,7 @@ function kreirajEHRuporabnika(pacient) {
  
 
 
-function generirajUporabnike() {
+function generirajPodatke() {
     for(var i = 0; i < 3; i++) {
         kreirajEHRuporabnika(patientList[i]);
     }
